@@ -1,0 +1,54 @@
+! Cisco Router R1
+! Router-on-a-Stick + DHCP reference configuration
+
+enable
+configure terminal
+
+hostname R1
+
+interface gigabitEthernet0/0
+ no shutdown
+ exit
+
+interface gigabitEthernet0/0.10
+ encapsulation dot1Q 10
+ ip address 192.168.10.1 255.255.255.0
+ description Management-VLAN
+ exit
+
+interface gigabitEthernet0/0.20
+ encapsulation dot1Q 20
+ ip address 192.168.20.1 255.255.255.0
+ description Support-VLAN
+ exit
+
+interface gigabitEthernet0/0.30
+ encapsulation dot1Q 30
+ ip address 192.168.30.1 255.255.255.0
+ description Admin-VLAN
+ exit
+
+ip dhcp excluded-address 192.168.10.1 192.168.10.10
+ip dhcp excluded-address 192.168.20.1 192.168.20.10
+ip dhcp excluded-address 192.168.30.1 192.168.30.10
+
+ip dhcp pool MANAGEMENT
+ network 192.168.10.0 255.255.255.0
+ default-router 192.168.10.1
+ dns-server 8.8.8.8
+ exit
+
+ip dhcp pool SUPPORT
+ network 192.168.20.0 255.255.255.0
+ default-router 192.168.20.1
+ dns-server 8.8.8.8
+ exit
+
+ip dhcp pool ADMIN
+ network 192.168.30.0 255.255.255.0
+ default-router 192.168.30.1
+ dns-server 8.8.8.8
+ exit
+
+end
+write memory
